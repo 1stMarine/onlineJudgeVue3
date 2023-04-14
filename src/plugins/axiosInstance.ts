@@ -23,7 +23,6 @@ API.interceptors.response.use(
     response => {
         
         if(response.data.state == 40002){
-            console.log("未登录");
             ElNotification({
                 title: "请求被拒绝!",
                 message: "未登录!",
@@ -34,7 +33,6 @@ API.interceptors.response.use(
         }
     },
     error => {
-        console.log(error);
         
     }
 )

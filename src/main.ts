@@ -1,7 +1,7 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-
-
+import { getCurrentInstance } from 'vue';
+import { ElNotification } from 'element-plus';
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import piniaPersist from 'pinia-plugin-persist'
@@ -22,8 +22,23 @@ app.use(pinia)
 app.use(router)
 
 app.use(ace)
-console.log("ehcharts",echarts);
 
+// 挂载全局方法
+const showMessage = ( message: string, state: any) => {
+    ElNotification({
+        title: '消息提醒',
+        message: message,
+        type: state ? 'success' : 'error',
+    })
+
+}
+
+app.provide('showMsg',showMessage);
+
+// 挂载全局变量
+
+app.config.globalProperties.$SUCCESS = 40001
+app.config.globalProperties.$FAILURE = 40002
 
 app.mount('#app')
 app.config.globalProperties.$axios = axios;

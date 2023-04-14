@@ -1,0 +1,1 @@
+declare module '@/components/front/aceEditor.vue'

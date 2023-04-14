@@ -154,7 +154,6 @@ import dailySubmitCount from './components/dailySubmitCount.vue';
 import submitRecord from '../problem/components/submitRecord.vue';
 import API from '@/plugins/axiosInstance';
 import { ElNotification } from 'element-plus';
-import { method } from 'lodash';
 const uid = ref(userStore().$state.user.id)
 const dialogVisible = ref(false)
 const activeTab = "first"
@@ -165,6 +164,7 @@ const user = ref(userStore().$state.user)
 
 // do not use same name with ref
 const form = reactive({
+    id:user.value.id,
     nickName: user.value.nickName,
     location: user.value.location,
     school: user.value.school,
@@ -200,6 +200,7 @@ const loadUserInof = () => {
     }).then((res) => {
         userStore().setUser(res.data.data)
         user.value = userStore().$state.user;
+        location.reload()
         if (typeof user.value.tag != 'object') {
             user.value.tag = JSON.parse(user.value.tag)
         }

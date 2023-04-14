@@ -24,18 +24,17 @@ const adminList = [
         "adminQuestionList",
         "admin",
         "addMatch",
-        "adminMatchList"
+        "adminMatchList",
+        "manageMatch"
 ]
 
 // 此处负责登录的路由拦截
 export default function setupAllRouterGuard(router: Router) {
-	console.log('正在进行路由拦截');
 
 	router.beforeEach(async (to, from, next) => {
               
         if(whiteList.indexOf(to.name) != -1){
                 // 没登陆，但是白名单
-                console.log("白名单地址");
                 
                 next()
                 return;
@@ -46,7 +45,6 @@ export default function setupAllRouterGuard(router: Router) {
                 if(adminList.indexOf(to.name) != -1 && userStore().$state.isAdmin){
                         next()
                 }else if(adminList.indexOf(to.name) != -1 && !userStore().$state.isAdmin){
-                        console.log("不是管理，但是你访问了");
                         ElNotification({
                                 title: "嗨嗨嗨",
                                 message: "小朋友不可以学坏坏",
@@ -58,7 +56,6 @@ export default function setupAllRouterGuard(router: Router) {
                                 
                         })
                 }else if(adminList.indexOf(to.name) == -1){
-                        console.log("不是管理，但是你登陆了");
                         
                         next()
                 }

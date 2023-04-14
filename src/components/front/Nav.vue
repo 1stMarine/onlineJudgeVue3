@@ -12,9 +12,10 @@
 
     
     <div class="flex-grow" />
-    <p id="userName">{{ nickName }}</p>
+    <!-- 头像，名字 -->
+    <p id="userName">{{ user.nickName }}</p>
     <el-dropdown>
-      <el-avatar :size="50" :src="url" />
+      <el-avatar :size="50" :src="user.url" />
       <template #dropdown>
         <el-dropdown-menu>
           <el-dropdown-item @click="loginDrawer = true" v-if="!loginReady">登录/注册</el-dropdown-item>
@@ -90,10 +91,9 @@ import * as _ from 'lodash'
 import {userStore} from '../../store'
 import emitter from "@/lib/bus";
 import  { MittRouterNameSpace } from "@/lib/type";
-const url = userStore().$state.user.url
-const nickName = userStore().$state.user.nickName
 
 
+const user = ref(userStore().$state.user)
 
 
 const activeIndex = ref("")
@@ -143,7 +143,6 @@ function submitLogin(){
     data:loginForm,
     method:'post'
   }).then((res)=>{
-    console.log(res.data);
     if(res.data.state == 40000){
       // 登陆失败
       ElNotification({
@@ -262,7 +261,6 @@ const logout = () => {
 
 const submitForm = (formEl: FormInstance | undefined) => {
   if (!formEl) return
-  console.log(formEl);
   
   formEl.validate((valid) => {
     if (valid) {
@@ -272,7 +270,6 @@ const submitForm = (formEl: FormInstance | undefined) => {
         data:registerForm,
         method:'post'
       }).then((res)=>{
-        console.log(res.data);
         ElNotification({
             title: "操作成功",
             message: res.data.message,
@@ -281,9 +278,7 @@ const submitForm = (formEl: FormInstance | undefined) => {
         loginDrawer = ref(false)
 
       })
-      console.log('submit!')
     } else {
-      console.log('error submit!')
       return false
     }
   })

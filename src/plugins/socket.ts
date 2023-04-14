@@ -37,7 +37,6 @@ var socket = {
    */
   init: () => {
     if (!("WebSocket" in window)) {
-      console.log('浏览器不支持WebSocket')
       return null
     }
 
@@ -76,7 +75,7 @@ var socket = {
 
     // 连接成功
     socket.websock.onopen = function (e) {
-      console.log('连接成功',e)
+      console.log('连接成功')
       socket.socket_open = true
       socket.is_reonnect = true
       // 开启心跳

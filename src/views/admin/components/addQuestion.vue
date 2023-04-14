@@ -26,11 +26,9 @@ const fileList = ref<UploadUserFile[]>([
 ])
 
 const handleRemove: UploadProps['onRemove'] = (file, uploadFiles) => {
-  console.log(file, uploadFiles)
 }
 
 const handlePreview: UploadProps['onPreview'] = (uploadFile) => {
-  console.log(uploadFile)
 }
 
 const handleExceed: UploadProps['onExceed'] = (files, uploadFiles) => {

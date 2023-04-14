@@ -30,8 +30,8 @@
     import { useRouter } from 'vue-router';
     import type { Question } from '@/lib/types'
     import { ElNotification } from 'element-plus'
-    
- 
+    import { judgerStore } from '@/stores/judgerStore';   
+    import { questionStore } from '@/stores/questionStore';
 
     const props = defineProps(['questions','state']);
 
@@ -39,9 +39,7 @@
         
     
     const router = useRouter()
-    const page = ref(1)
-    const searchContent = ref("")
-  
+
   
   
     const tableData = reactive({
@@ -49,21 +47,17 @@
     })
   
     const toProblemDetial = (question:Question)=>{
+      questionStore().setCurrentChoice(question)
+      judgerStore().setJudgeType(101)
       if(props.state != '已开始'){
         ElNotification({
                 title: "不润许的操作!",
-                message: "比赛还没开始，请不要抢跑!",
+                message: "比赛状态已经结束或未开始!",
                 type: 'error',
             })
         return
       }
-      router.push({
-        name:'problemDetial',
-        query:{
-          questionName:question.questionName,
-          id:String(question.id),
-          type:"match"
-      }})
+      router.push({name:'problemDetial'})
     }
   
 

@@ -15,12 +15,13 @@
             <div v-show="match.state == '未开始'"> <el-tag  type="success" class="mx-1" effect="dark" round>{{ match.state }}</el-tag></div>
             <div v-show="match.state == '已开始'"> <el-tag  type="danger" class="mx-1" effect="dark" round>{{ match.state }}</el-tag></div>
             <div v-show="match.state == '已结束'"> <el-tag  type="info" class="mx-1" effect="dark" round>{{ match.state }}</el-tag></div>
-            <el-button link type="success" @click="toMatchDetial(match.id)">查看详情</el-button>
+            <el-button link type="success" @click="toMatchDetial(match)">查看详情</el-button>
           </div>
         </div>
       </el-card>
     </el-col>
   </el-row>
+  <el-empty v-if="Data.values.length == 0" description="目前还没有进行任何竞赛噢~" />
 </template>
   
 <script lang="ts" setup>
@@ -29,43 +30,41 @@ import emitter from "@/lib/bus";
 import { MittRouterNameSpace } from "@/lib/type";
 import API from '@/plugins/axiosInstance';
 import { useRouter } from 'vue-router';
-import { userStore } from '@/store';
+import { matchStore } from '@/stores/matchStore';
 
 const router = useRouter()
 onMounted(() => {
   emitter.emit(MittRouterNameSpace.ChangeRouter, "/match");
 })
 
-const toMatchDetial = (id:string) => {
-  router.push({
-      name:'matchDetial',
-      query:{
-        id:String(id),
-    }})
+const toMatchDetial = (match:any) => {
+  matchStore().setCurrentChoice(match)
+  router.push({name:'matchDetial',})
 }
 
-type Match = {
-  id: number,
-  matchName: string,
-  matchDescription: string,
-  createTime: string,
-  startTime: string,
-  endTime: string,
-  persistentTime: number,
-  participationCount: number,
-  matchType: string,
-  imgUrl: string,
-  state: string
-}
 
-const Data = ref([])
-
+const Data = ref([
+  {
+    id: '',
+    matchName: 0,
+    matchDescription: 0,
+    createTime: 0,
+    startTime: 0,
+    endTime: 0,
+    persistentTime: 0,
+    participationCount: 0,
+    matchType: 0,
+    imgUrl: '',
+    state: ''
+  }
+])
+Data.value = []
 const loadMatchList = () => {
+  
   API({
     url: '/getMatchList',
     method: 'post'
   }).then((res) => {
-
     Data.value = res.data.data
   })
 }

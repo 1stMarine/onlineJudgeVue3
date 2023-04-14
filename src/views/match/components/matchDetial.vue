@@ -17,13 +17,13 @@
                 </el-col>
                 <el-col :span="12">
 
-
-                    <el-countdown format="[比赛将在]DD [天] HH:mm:ss [后开始]" :value="value2" />
+                    <!-- 倒计时 -->
+                    <el-countdown format="[比赛将在]DD [天] HH:mm:ss [后开始]" :value="value2"  />
 
                 </el-col>
             </el-row>
 
-            <el-row>
+            <el-row >
                 <el-col :span="20">
                     <h3 style="color: grey;">参与人数 : {{ matchs.match.participationCount }} 比赛时间 : {{ matchs.match.startTime
                     }}开始, 持续 {{ matchs.match.persistentTime }}分钟</h3>
@@ -35,14 +35,14 @@
             </el-row>
         </div>
 
-        <el-tabs v-model="activeName" class="demo-tabs">
+        <el-tabs v-model="activeName" class="demo-tabs" style="margin-top: 20px;">
             <el-tab-pane label="详情" name="first">
                 <Detials v-if="showDetial" :match="matchs.match" />
             </el-tab-pane>
             <el-tab-pane label="题目" name="second">
                 <questionList v-if="showDetial" :questions="matchs.match.questions" :state="matchs.match.state" />
             </el-tab-pane>
-            <el-tab-pane label="排名" name="third">排名</el-tab-pane>
+            <el-tab-pane label="排名" name="third"><rank/></el-tab-pane>
         </el-tabs>
     </el-card>
 </template>
@@ -54,11 +54,11 @@ import dayjs from 'dayjs'
 import Detials from './details.vue'
 import questionList from './questionList.vue';
 import { userStore } from '@/store/index'
-import { method } from 'lodash';
+import rank from './rank.vue'
 import { ElNotification } from 'element-plus';
+import { matchStore } from '@/stores/matchStore';
 const activeName = "first"
-const route = useRoute()
-const id = route.query.id
+
 const showDetial = ref(false)
 const uid = userStore().$state.user.id
 
@@ -102,9 +102,9 @@ const loadParticipated = () => {
     }
 
 }
-
+const mid = matchStore().$state.currentChoice.id
 API({
-    url: '/getMatchDetail/' + id,
+    url: '/getMatchDetail/' + mid,
     method: 'get'
 }).then((res) => {
     matchs.match = reactive(res.data.data)
@@ -134,6 +134,10 @@ const matchs = reactive({
     }
 })
 const value2 = ref(dayjs('2023-03-01 09:30'))
+// 倒计时结束
+const state =ref(matchStore().$state.currentChoice.state)
+
+
 
 </script>
 <style></style>

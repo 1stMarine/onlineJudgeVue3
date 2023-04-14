@@ -11,13 +11,13 @@
         </el-form-item>
         <el-form-item label="开始时间">
             <el-col :span="11">
-                <el-date-picker v-model="form.startTime" type="datetime" placeholder="选择开始时间" style="width: 100%" />
+                <el-date-picker v-model="form.startTime" type="datetime" placeholder="选择开始时间" style="width: 100%"  value-format="YYYY-MM-DD HH:mm"  format="YYYY-MM-DD HH:mm"/>
             </el-col>
             <el-col :span="2" class="text-center" style="text-align: center;">
                 <span class="text-gray-500">-</span>
             </el-col>
             <el-col :span="11">
-                <el-date-picker type="datetime" v-model="form.endTime" placeholder="选择结束时间" style="width: 100%" />
+                <el-date-picker type="datetime" v-model="form.endTime" placeholder="选择结束时间" style="width: 100%" value-format="YYYY-MM-DD HH:mm"  format="YYYY-MM-DD HH:mm" />
             </el-col>
             <el-col :span="11">
                 竞赛将持续 {{ form.persistentTime }} 分钟
@@ -54,8 +54,8 @@ import { method } from 'lodash';
 // do not use same name with ref
 const form = reactive({
     matchName: '',
-    startTime: '2023-03-01 04:00:00',
-    endTime: '2023-03-01 04:30:00',
+    startTime: '2023-03-01 04:00',
+    endTime: '2023-03-01 04:30',
     privat: false,
     matchDescription: '',
     matchType: '',
@@ -122,13 +122,13 @@ const getQuestionList = () => {
 getQuestionList()
 
 const onSubmit = () => {
-    console.log("values",form.questionIds)
+    console.log(form);
+    
     API({
         url:'/addMatch',
         data:form,
         method:'post'
     }).then((res)=>{
-        console.log(res);
         
     })
 }

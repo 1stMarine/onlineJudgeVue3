@@ -43,54 +43,14 @@ import { ref } from 'vue'
 import API from '@/plugins/axiosInstance';
 import emitter from "@/lib/bus";
 import { userStore } from '@/store/index'
-import { questionStore } from '@/stores/questionStore';
 import { reactive, onMounted, onUnmounted } from 'vue';
-const props = defineProps(['uid', 'qid']);
-const uid = userStore().$state.user.id
-const qid = questionStore().$state.currentChoice.id
+const props = defineProps(['records']);
 
 const dialogVisible = ref(false)
-userStore()
-onMounted(() => {
-    
-    emitter.on('loadRecord', () => {
-        
-        
-        const url = "/getSubmitRecords/" + uid + "/" + qid + "/1"
-        API({
-            url: url,
-            method: 'get'
-        }).then((res) => {
-            tableData.record_list = res.data.data
-        })
-
-    });
-})
-
 const tableData = reactive({
-    record_list: []
+    record_list: props.records
 })
-const loadRecord = () => {
-    let url = "/getSubmitRecordsWithQid/" + qid + "/1"
 
-    
-    if (userStore().$state.isLogin) {
-        if(qid != undefined){
-            url = "/getSubmitRecords/" + uid + "/" + qid + "/1"
-        }else{
-            url = "/getSubmitRecordsWithUid/" + uid + "/1"
-        }
-    }
-
-    API({
-        url: url,
-        method: 'get'
-    }).then((res) => {
-       
-        tableData.record_list = res.data.data
-    })
-}
-loadRecord()
 
 
 

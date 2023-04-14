@@ -72,11 +72,12 @@
    
 <script>
 import ace from 'ace-builds'
+// 高亮
 import 'ace-builds/src-noconflict/snippets/c_cpp'
 import 'ace-builds/src-noconflict/snippets/python'
 import 'ace-builds/src-noconflict/snippets/golang'
 import 'ace-builds/src-noconflict/snippets/java'
-
+// 主题
 import 'ace-builds/src-noconflict/ext-language_tools'
 import 'ace-builds/src-noconflict/theme-monokai'
 import 'ace-builds/src-noconflict/theme-chrome'
@@ -85,6 +86,7 @@ import 'ace-builds/src-noconflict/theme-xcode'
 import 'ace-builds/src-noconflict/theme-github'
 import 'ace-builds/src-noconflict/theme-eclipse'
 import  emitter from "@/lib/bus";
+// 代码补全
 import 'ace-builds/src-noconflict/mode-c_cpp'
 import 'ace-builds/src-noconflict/mode-python'
 import 'ace-builds/src-noconflict/mode-golang'
@@ -94,6 +96,10 @@ import { ref , defineProps } from 'vue'
 import API from '@/plugins/axiosInstance';
 import { ElNotification } from 'element-plus'
 import {userStore} from '../../store'
+import {judgerStore} from '@/stores/judgerStore'
+import {questionStore} from '@/stores/questionStore'
+
+import {matchStore} from '@/stores/matchStore'
 import {
         Document,
         Menu as IconMenu,
@@ -164,14 +170,19 @@ export default {
         let isCorrect = ref(false)
         let underMessage = ref('')
         let submiting = ref(false)
-        let uid = ref(props['uid'])
-        let qid = ref(props['qid'])
-        let userName = ref(props['userName'])
-        let questionName = ref(props['questionName'])
+        
+        let uid = ref(userStore().$state.user.id)
+        let userName = ref(userStore().$state.user.nickName)
+        let qid = ref(questionStore().$state.currentChoice.id)
+        let questionName = ref(questionStore().$state.currentChoice.questionName)
+//      代码编译类型 = 比赛:101 , 普通:100
+        let type = ref(judgerStore().$state.type)
+
         let stepInfoMsg = ref(["等待提交","初始化...","编译中...","运行中...","等待结果"])
         let stepDoneMsg = ref(["提交完成","初始化完毕","编译完毕","运行完毕","测试完成"])
         let infoIndex = ref(0)
         let showProcess = ref(false)
+
         // webcoket
         socket.ws_url = socket.base_url + "?id=" + uid.value
         socket.init()
@@ -197,7 +208,8 @@ export default {
             infoIndex,
             stepInfoMsg,
             stepDoneMsg,
-            showProcess
+            showProcess,
+            type
         }
     },
     props: {
@@ -207,6 +219,7 @@ export default {
         questionName:String
     },
     mounted() {
+        // 初始化aceEditor
         this.aceEditor = ace.edit(this.$refs.ace, {
             maxLines: 35,
             minLines: 30,
@@ -227,6 +240,7 @@ export default {
     },
     data() {
         return {
+            // aceEditor初始化参数
             aceEditor: null,
             toggle: false,
             wrap: true,
@@ -242,9 +256,12 @@ export default {
     methods: {
         // 提交请求
         judge() {
+            console.log(matchStore().$state.currentChoice.id);
             this.showProcess = ref(true)
             this.isError = false
             this.submiting = true
+            // 提交内容
+            console.log(this.type);
             let judgeData = {
                 code:this.aceEditor.getSession().getValue(),
                 uid:this.uid,
@@ -252,8 +269,10 @@ export default {
                 userName:this.userName,
                 questionName:this.questionName,
                 language:this.modeName,
-                type:"normal",
+                type:this.type,
+                mid:matchStore().$state.currentChoice.id
             }
+            // 发送判题请求
             API({
                 url: '/judge',
                 data: judgeData,
@@ -264,8 +283,8 @@ export default {
                     return;
                 }
                 if(res.data.state != 40002){
+                    // 重新加载编译记录
                     emitter.emit('loadRecord')
-
                 }
                 ElNotification({
                     title: res.data.data.title,
@@ -282,33 +301,36 @@ export default {
                     this.output = res.data.data.testSample == null ? " " : res.data.data.testSample.userOutput 
                     this.answer = res.data.data.testSample == null ? " " : res.data.data.testSample.output 
                 }else{
-
+                    // 成功
                     this.infoIndex= 5
                     this.stepInfoMsg[4] = this.stepDoneMsg[4]
                     this.isCorrect = true
                     this.isError = false
                 }
             },(reason) => {
-                console.log("reson",reason);
             })
         },
+        // 弹出设置窗口
         toggleConfigPanel() {
             this.toggle = !this.toggle
         },
         change() {
             this.$emit('input', this.aceEditor.getSession().getValue())
         },
+        // 改变代码补全
         handleModelPathChange(modelPath) {
             this.aceEditor.getSession().setMode(modelPath)
             this.modeName = modelPath.split('/')[2]
         },
+        // 换行
         handleWrapChange(wrap) {
             this.aceEditor.getSession().setUseWrapMode(wrap)
         },
+        // 改变主题
         handleThemeChange(theme){
             this.aceEditor.setTheme(theme)
-            
         },
+        // 改变字体大小
         handleFontSizeChange(size){
             this.aceEditor.setFontSize(size)
         }

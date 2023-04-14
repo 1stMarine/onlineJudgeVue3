@@ -21,7 +21,7 @@ import QuestionList from '@/views/problem/index.vue'
   </div>
   <div class="right"></div>
 </el-main>
-<el-footer>
+<el-footer style="background-color: black;">
 
 </el-footer>
 </el-container>

@@ -1,7 +1,8 @@
 <template>
-  <div >
+  <div>
     <h1>{{ questions.question.id }} . {{ questions.question.questionName }}</h1>
-    <el-tabs v-model="activeName" class="demo-tabs" style="width: 100%;" @tab-click="handleClick">
+    <el-tabs v-model="activeName" class="demo-tabs" style="width: 100%;" 
+      v-loading="loading_question">
       <!-- 题目详细信息 -->
       <el-tab-pane label="题目" name="first" style="width: 100%;">
         <div class="common-layout">
@@ -17,11 +18,13 @@
               <el-divider content-position="left">数据范围</el-divider>
               <span>{{ questions.question.dataRange }}</span>
               <el-divider content-position="left">样例输入</el-divider>
-              <el-alert v-for="input in questions.question.inputSample" :title="input" type="info" :closable="false" style="margin-bottom: 10px;" />
+              <el-alert v-for="input in questions.question.inputSample" :title="input" type="info" :closable="false"
+                style="margin-bottom: 10px;" />
               <el-divider content-position="left">样例输出</el-divider>
-              <el-alert v-for="output in questions.question.outputSample" :title="output" type="info" :closable="false" style="margin-bottom: 10px;" />
+              <el-alert v-for="output in questions.question.outputSample" :title="output" type="info" :closable="false"
+                style="margin-bottom: 10px;" />
             </el-main>
-            
+
             <!-- 右侧题目基础描述栏 -->
             <el-aside width="34%">
               <el-card class="box-card">
@@ -33,25 +36,26 @@
                 <div class="info-item">
                   <div style="float: left;">难度:</div>
                   <div style="float:right">
-                    <el-tag  class="ml-2" type="success" v-show="questions.question.difficulty == '简单'">简单</el-tag>
+                    <el-tag class="ml-2" v-show="questions.question.difficulty == '简单'">简单</el-tag>
                     <el-tag class="ml-2" type="success" v-show="questions.question.difficulty == '中等'">中等</el-tag>
-                    <el-tag class="ml-2" type="success" v-show="questions.question.difficulty == '困难'">困难</el-tag>
-                    <el-tag class="ml-2" type="success" v-show="questions.question.difficulty == '噩梦'">噩梦</el-tag>
+                    <el-tag class="ml-2" type="warning" v-show="questions.question.difficulty == '困难'">困难</el-tag>
+                    <el-tag class="ml-2" type="danger" v-show="questions.question.difficulty == '噩梦'">噩梦</el-tag>
                   </div>
                 </div>
                 <div style="clear:both;"></div>
                 <el-divider>
                   <el-icon><star-filled /></el-icon>
                 </el-divider>
-                <div  class="info-item">
+                <div class="info-item">
                   <div style="float: left;">时空限制:</div>
-                  <div style="float:right">{{ questions.question.timeLimit }}s/{{ parseInt(questions.question.memoryLimit / 1024) }}Mb</div>
+                  <div style="float:right">{{ questions.question.timeLimit }}s/{{ parseInt(questions.question.memoryLimit
+                    / 1024) }}Mb</div>
                 </div>
                 <div style="clear:both;"></div>
                 <el-divider>
                   <el-icon><star-filled /></el-icon>
                 </el-divider>
-                <div  class="info-item">
+                <div class="info-item">
                   <div style="float: left;">总通过数:</div>
                   <div style="float:right">{{ questions.question.totalPass }}</div>
                 </div>
@@ -59,7 +63,7 @@
                 <el-divider>
                   <el-icon><star-filled /></el-icon>
                 </el-divider>
-                <div  class="info-item">
+                <div class="info-item">
                   <div style="float: left;">总尝试数:</div>
                   <div style="float:right">{{ questions.question.totalAttempt }}</div>
                 </div>
@@ -67,7 +71,7 @@
                 <el-divider>
                   <el-icon><star-filled /></el-icon>
                 </el-divider>
-                <div  class="info-item">
+                <div class="info-item">
                   <div style="float: left;">题目来源:</div>
                   <div style="float:right">{{ questions.question.resource }}</div>
                 </div>
@@ -75,30 +79,31 @@
                 <el-divider>
                   <el-icon><star-filled /></el-icon>
                 </el-divider>
-                <div  class="info-item">
+                <div class="info-item">
                   <div class="demo-collapse">
-                  <el-collapse>
-                    <el-collapse-item title="算法标签" name="1">
-                      <div v-for="tag in questions.question.tag " >
-                        <el-tag class="ml-2" type="info" style="float: left;margin: 5px;">{{ tag }}</el-tag>
-                      </div>
+                    <el-collapse>
+                      <el-collapse-item title="算法标签" name="1">
+                        <div v-for="tag in questions.question.tag ">
+                          <el-tag class="ml-2" type="info" style="float: left;margin: 5px;">{{ tag }}</el-tag>
+                        </div>
 
-                    </el-collapse-item>
+                      </el-collapse-item>
                     </el-collapse>
-                    </div>
+                  </div>
                 </div>
               </el-card>
             </el-aside>
           </el-container>
         </div>
         <br>
-        <aceEditor :qid="id" :questionName="questionName" :uid="uid" :userName="userName"/>
-          
+        <!-- 编辑器 -->
+        <aceEditor />
       </el-tab-pane>
-      <el-tab-pane label="提交记录" name="second" style="width: 100%;" >
-        <submitRecord :qid="id" :uid="uid"/>
+      <el-tab-pane label="提交记录" name="second" style="width: 100%;">
+        <!-- 提交记录 -->
+        <submitRecord />
       </el-tab-pane>
-      <el-tab-pane label="题解" name="third">Role</el-tab-pane>
+      
     </el-tabs>
   </div>
 </template>
@@ -107,57 +112,54 @@
 import submitRecord from './components/submitRecord.vue'
 import aceEditor from '@/components/front/aceEditor.vue'
 import { StarFilled } from '@element-plus/icons-vue'
-import { ref,reactive } from 'vue'
-import type { TabsPaneContext } from 'element-plus'
-import { useRoute } from 'vue-router';
-import {userStore} from '../../store'
-import API from '@/plugins/axiosInstance'
+import { ref, reactive } from 'vue'
+import { questionStore } from '@/stores/questionStore';
 
-const route = useRoute()
-const id = route.query.id
-const questionName = route.query.questionName
-const uid = ref(userStore().$state.user.id)
-const userName  = ref(userStore().$state.user.nickName)
+// 当前题目选择存储
+const quesitonStore = questionStore()
 
-API({
-  url:'/getQuestion/'+id,
-  method:'get'
-}).then((res)=>{
-  res.data.data.inputSample = JSON.parse(res.data.data.inputSample)
-  res.data.data.outputSample = JSON.parse(res.data.data.outputSample)
-  res.data.data.tag = JSON.parse(res.data.data.tag)
-  questions.question = reactive(res.data.data)
-  
-})
+
+const loading_question = ref(true)
+
+
 const questions = reactive({
-  question:{
-    id:0,
-  questionName:'',
-  inputStyle:'',
-  outputStyle:'',
-  inputSample:'',
-  outputSample:'',
-  dataRange:'',
-  difficulty:'',
-  timeLimit:0,
-  memoryLimit:0,
-  description:'',
-  totalPass:0,
-  totalAttempt:0,
-  resource:'',
-  tag:''
+  question: {
+    id: 0,
+    questionName: '',
+    inputStyle: '',
+    outputStyle: '',
+    inputSample: '',
+    outputSample: '',
+    dataRange: '',
+    difficulty: '',
+    timeLimit: 0,
+    memoryLimit: 0,
+    description: '',
+    totalPass: 0,
+    totalAttempt: 0,
+    resource: '',
+    tag: ''
   }
 })
 
+// 从pina种加载题目
+questions.question = quesitonStore.$state.currentChoice
+if (typeof questions.question.inputSample == "string") {
+  questions.question.inputSample = JSON.parse(questions.question.inputSample)
+  questions.question.outputSample = JSON.parse(questions.question.outputSample)
+  questions.question.tag = JSON.parse(questions.question.tag)
 
+} else {
+  questions.question.inputSample = questions.question.inputSample
+  questions.question.outputSample = questions.question.outputSample
+  questions.question.tag = questions.question.tag
+}
+loading_question.value = false
 
-
-
+// tabs激活选择
 const activeName = ref('first')
 
-const handleClick = (tab: TabsPaneContext, event: Event) => {
-  console.log(tab, event)
-}
+
 </script>
 
 <style scoped>
@@ -171,7 +173,4 @@ const handleClick = (tab: TabsPaneContext, event: Event) => {
 .text {
   font-size: 14px;
 }
-
-
-
 </style>
