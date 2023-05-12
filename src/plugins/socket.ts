@@ -12,8 +12,9 @@ var socket = {
   // 固定的WebSocket地址：此处是从env文件中读取socket地址，可以自行从其他config文件中读取或直接写死
   // 如需使用动态WebSocket地址，请自行作ajax通讯后扩展
   ws_url: "",
-  // 43.139.235.208
-  base_url:'ws://localhost:8081/ws',
+  // online: wss://www.nextstepcode.club/ws
+  // local : ws://127.0.0.1:8081/ws
+  base_url:'ws://127.0.0.1:8081/ws',
   // 开启标识
   socket_open: false,
   // 心跳timer

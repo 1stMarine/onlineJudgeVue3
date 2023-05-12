@@ -1,8 +1,7 @@
 <template>
   <div>
     <h1>{{ questions.question.id }} . {{ questions.question.questionName }}</h1>
-    <el-tabs v-model="activeName" class="demo-tabs" style="width: 100%;" 
-      v-loading="loading_question">
+    <el-tabs v-model="activeName" class="demo-tabs" style="width: 100%;" v-loading="loading_question">
       <!-- 题目详细信息 -->
       <el-tab-pane label="题目" name="first" style="width: 100%;">
         <div class="common-layout">
@@ -10,19 +9,19 @@
             <el-main>
               <!-- 左侧题目详细信息描述栏 -->
               <el-divider content-position="left"><strong>题目信息</strong></el-divider>
-              <span>{{ questions.question.description }}</span>
+              <span style="white-space: pre-wrap;">{{ questions.question.description }}</span>
               <el-divider content-position="left">输入样式</el-divider>
-              <span>{{ questions.question.inputStyle }}</span>
+              <span style="white-space: pre-wrap;">{{ questions.question.inputStyle }}</span>
               <el-divider content-position="left">输出格式</el-divider>
-              <span>{{ questions.question.outputStyle }}</span>
+              <span style="white-space: pre-wrap;">{{ questions.question.outputStyle }}</span>
               <el-divider content-position="left">数据范围</el-divider>
               <span>{{ questions.question.dataRange }}</span>
               <el-divider content-position="left">样例输入</el-divider>
               <el-alert v-for="input in questions.question.inputSample" :title="input" type="info" :closable="false"
-                style="margin-bottom: 10px;" />
+                style="margin-bottom: 10px;white-space: pre-wrap;" />
               <el-divider content-position="left">样例输出</el-divider>
               <el-alert v-for="output in questions.question.outputSample" :title="output" type="info" :closable="false"
-                style="margin-bottom: 10px;" />
+                style="margin-bottom: 10px;white-space: pre-wrap;" />
             </el-main>
 
             <!-- 右侧题目基础描述栏 -->
@@ -48,8 +47,7 @@
                 </el-divider>
                 <div class="info-item">
                   <div style="float: left;">时空限制:</div>
-                  <div style="float:right">{{ questions.question.timeLimit }}s/{{ parseInt(questions.question.memoryLimit
-                    / 1024) }}Mb</div>
+                  <div style="float:right">{{ questions.question.timeLimit }}s/{{ parseInt(questions.question.memoryLimit / 1024) }}Mb</div>
                 </div>
                 <div style="clear:both;"></div>
                 <el-divider>
@@ -97,13 +95,13 @@
         </div>
         <br>
         <!-- 编辑器 -->
-        <aceEditor />
+        <aceEditor :mode="'normal'" :code="''" :title="''"/>
       </el-tab-pane>
       <el-tab-pane label="提交记录" name="second" style="width: 100%;">
         <!-- 提交记录 -->
         <submitRecord />
       </el-tab-pane>
-      
+
     </el-tabs>
   </div>
 </template>
@@ -114,12 +112,20 @@ import aceEditor from '@/components/front/aceEditor.vue'
 import { StarFilled } from '@element-plus/icons-vue'
 import { ref, reactive } from 'vue'
 import { questionStore } from '@/stores/questionStore';
-
+import { useRoute } from 'vue-router';
+import API from '@/plugins/axiosInstance';
+const route = useRoute()
+const from = route.query.from
+const loading_question = ref(true)
 // 当前题目选择存储
 const quesitonStore = questionStore()
+// tabs激活选择
 
 
-const loading_question = ref(true)
+const activeName = ref('first')
+
+
+
 
 
 const questions = reactive({
@@ -142,22 +148,34 @@ const questions = reactive({
   }
 })
 
-// 从pina种加载题目
-questions.question = quesitonStore.$state.currentChoice
-if (typeof questions.question.inputSample == "string") {
-  questions.question.inputSample = JSON.parse(questions.question.inputSample)
-  questions.question.outputSample = JSON.parse(questions.question.outputSample)
-  questions.question.tag = JSON.parse(questions.question.tag)
-
+if (from == "record") {
+  // 从后台加载
+  API({
+    url: '/getQuestion/' + quesitonStore.$state.currentChoice.qid,
+    method: 'get'
+  }).then((res) => {
+    questions.question = res.data.data
+    questions.question.inputSample = JSON.parse(questions.question.inputSample)
+    questions.question.outputSample = JSON.parse(questions.question.outputSample)
+    questions.question.tag = JSON.parse(questions.question.tag)
+    loading_question.value = false
+  })
 } else {
-  questions.question.inputSample = questions.question.inputSample
-  questions.question.outputSample = questions.question.outputSample
-  questions.question.tag = questions.question.tag
-}
-loading_question.value = false
+  // 从pina种加载题目
+  questions.question = quesitonStore.$state.currentChoice
+  if (typeof questions.question.inputSample == "string") {
+    questions.question.inputSample = JSON.parse(questions.question.inputSample)
+    questions.question.outputSample = JSON.parse(questions.question.outputSample)
+    questions.question.tag = JSON.parse(questions.question.tag)
+  } else {
+    questions.question.inputSample = questions.question.inputSample
+    questions.question.outputSample = questions.question.outputSample
+    questions.question.tag = questions.question.tag
+  }
+  loading_question.value = false
 
-// tabs激活选择
-const activeName = ref('first')
+
+}
 
 
 </script>

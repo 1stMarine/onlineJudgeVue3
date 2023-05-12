@@ -18,12 +18,12 @@
                 <el-col :span="12">
 
                     <!-- 倒计时 -->
-                    <el-countdown format="[比赛将在]DD [天] HH:mm:ss [后开始]" :value="value2"  />
+                    <el-countdown format="[比赛将在]DD [天] HH:mm:ss [后开始]" :value="value2" />
 
                 </el-col>
             </el-row>
 
-            <el-row >
+            <el-row>
                 <el-col :span="20">
                     <h3 style="color: grey;">参与人数 : {{ matchs.match.participationCount }} 比赛时间 : {{ matchs.match.startTime
                     }}开始, 持续 {{ matchs.match.persistentTime }}分钟</h3>
@@ -42,7 +42,9 @@
             <el-tab-pane label="题目" name="second">
                 <questionList v-if="showDetial" :questions="matchs.match.questions" :state="matchs.match.state" />
             </el-tab-pane>
-            <el-tab-pane label="排名" name="third"><rank/></el-tab-pane>
+            <el-tab-pane label="排名" name="third">
+                <rank />
+            </el-tab-pane>
         </el-tabs>
     </el-card>
 </template>
@@ -107,8 +109,11 @@ API({
     url: '/getMatchDetail/' + mid,
     method: 'get'
 }).then((res) => {
+
+
     matchs.match = reactive(res.data.data)
-    if(matchs.match.state != "未开始"){
+    console.log(matchs.match);
+    if (matchs.match.state != "未开始") {
         participateBtn.value = "不在报名时间"
         participated.value = true
     }
@@ -135,7 +140,7 @@ const matchs = reactive({
 })
 const value2 = ref(dayjs('2023-03-01 09:30'))
 // 倒计时结束
-const state =ref(matchStore().$state.currentChoice.state)
+const state = ref(matchStore().$state.currentChoice.state)
 
 
 

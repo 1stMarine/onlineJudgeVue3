@@ -19,9 +19,9 @@
       <template #dropdown>
         <el-dropdown-menu>
           <el-dropdown-item @click="loginDrawer = true" v-if="!loginReady">登录/注册</el-dropdown-item>
-          <el-badge is-dot class="item" v-if="loginReady">
+          <!-- <el-badge is-dot class="item" v-if="loginReady">
             <el-dropdown-item>消息</el-dropdown-item>
-          </el-badge>
+          </el-badge> -->
           <el-dropdown-item v-if="loginReady" @click="changeRoute('/user')">个人中心</el-dropdown-item>
           <el-dropdown-item v-if="loginReady" @click="logout">退出</el-dropdown-item>
         </el-dropdown-menu>

@@ -1,9 +1,10 @@
 <template>
     <div>
         <el-divider content-position="left"><strong>竞赛信息</strong></el-divider>
-        <span>{{ match.matchName }}</span>
-        <el-divider content-position="left">输入样式</el-divider>
+        <el-image :src="match.imgUrl" fit="fill" /><br>
         <span>{{ match.matchDescription }}</span>
+        <el-divider content-position="left">竞赛类型或须知</el-divider>
+        <span>{{ match.matchType }}</span>
     </div>
 </template>
 

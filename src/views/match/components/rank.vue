@@ -1,6 +1,6 @@
 <template>
 
-  <el-table :data="tableData" style="width: 100%">
+  <el-table :data="tableData" style="width: 100%;height: 500px;">
     <el-table-column type="index" :index="indexMethod"  label="排名"/>
     <el-table-column label="用户id" prop="uid"  width="180"/>
     <el-table-column label="用户名"  width="180">
@@ -29,7 +29,11 @@ import { matchStore } from '@/stores/matchStore';
 const indexMethod = (index: number) => {
   return ++index
 }
-const mid = matchStore().$state.currentChoice.id
+const prop = defineProps(['mid'])
+const mid = ref(matchStore().$state.currentChoice.id)
+if(mid.value == undefined || mid.value == "" ){
+  mid.value = prop.mid
+}
 const tableData = ref([
   // {
   //   "id": 288423936,
@@ -52,7 +56,7 @@ const len = ref(0)
 const results_index = ref(0)
 const loadRank = () => {
   API({
-    url: '/getMatchRank/' + mid,
+    url: '/getMatchRank/' + mid.value,
     method: 'get'
   }).then((res) => {
 

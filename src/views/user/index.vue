@@ -13,8 +13,13 @@
                 等级 : {{ user.level }}
             </div>
         </div>
+
+        
     </div>
     <div style="clear:both;"></div>
+    <br>
+
+
     <el-row :gutter="0" style="width: 25%;float:left">
         <el-col :span="24">
             <el-card shadow="always" style="height: 800px;">
@@ -128,8 +133,8 @@
                     <el-tab-pane label="提交记录" name="first">
                         <submitRecord :uid="uid" />
                     </el-tab-pane>
-                    <el-tab-pane label="发表解题" name="second">Config2</el-tab-pane>
-                    <el-tab-pane label="发表帖子" name="third">Config3</el-tab-pane>
+                    <!-- <el-tab-pane label="发表解题" name="second">Config2</el-tab-pane>
+                    <el-tab-pane label="发表帖子" name="third">Config3</el-tab-pane> -->
                 </el-tabs>
             </el-card>
         </el-col>

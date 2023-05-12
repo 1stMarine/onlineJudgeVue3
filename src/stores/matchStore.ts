@@ -18,7 +18,9 @@ export const matchStore = defineStore('match',{
                 imgUrl: '',
                 state: ''
             },
-            
+            editeMatch:{
+                mid:''
+            }
         }
     },
     getters:{},
@@ -26,6 +28,9 @@ export const matchStore = defineStore('match',{
         // 设置当前选择的竞赛
         setCurrentChoice(data:any){
             this.currentChoice = data
+        },
+        setEditMatchId(id:string){
+            this.editeMatch.mid = id
         }
 
     },

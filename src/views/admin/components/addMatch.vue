@@ -25,7 +25,7 @@
         </el-form-item>
 
         <el-form-item label="题目选择">
-            <el-select-v2 v-model="value" filterable :options="tableData" placeholder="Please select" style="width: 240px"
+            <el-select-v2 v-model="form.questionIds" filterable :options="tableData" placeholder="Please select" style="width: 240px"
                 multiple />
         </el-form-item>
 
@@ -47,12 +47,18 @@
 <script lang="ts" setup>
 import API from '@/plugins/axiosInstance';
 import { reactive, computed, ref } from 'vue'
-import type { Question } from '@/lib/types';
-import { method } from 'lodash';
+import { matchStore } from '@/stores/matchStore';
+
+const props = defineProps(['type']);
+const type = props.type
+const editMatchId = matchStore().$state.editeMatch.mid
+
+
+
 
 
 // do not use same name with ref
-const form = reactive({
+const form = ref({
     matchName: '',
     startTime: '2023-03-01 04:00',
     endTime: '2023-03-01 04:30',
@@ -63,19 +69,30 @@ const form = reactive({
     imgUrl: 'https://tse1-mm.cn.bing.net/th/id/OIP-C.lJ56d_wucWCXO5ZOPOYySAHaFP?w=248&h=180&c=7&r=0&o=5&pid=1.7',
     questionIds:[]
 })
-const value = ref([]);
 
-form.persistentTime = ref(computed<any>(() => {
-    var eventStartTime = new Date(form.startTime);
-    var eventEndTime = new Date(form.endTime);
+
+
+if(type == "edit"){
+    API({
+        url:'/getMatchDetail/'+editMatchId,
+        method:'get'
+    }).then((res)=>{
+        form.value = res.data.data
+        // TODO: 题目列表无法同步 
+        console.log(form.value);
+    })
+    
+    
+}
+form.value.persistentTime = ref(computed<any>(() => {
+    var eventStartTime = new Date(form.value.startTime);
+    var eventEndTime = new Date(form.value.endTime);
     var duration = eventEndTime.valueOf() - eventStartTime.valueOf();
     return duration / 60000
 }))
 
-form.questionIds = ref(computed<any>(()=>{
-    return value.value
-}))
 
+// 问题难度选择
 const tableData = reactive<Array<any|undefined>>([
     {
         label: '简单',
@@ -122,14 +139,13 @@ const getQuestionList = () => {
 getQuestionList()
 
 const onSubmit = () => {
-    console.log(form);
-    
     API({
-        url:'/addMatch',
-        data:form,
-        method:'post'
-    }).then((res)=>{
-        
+        url: '/addMatch',
+        data:form.value,
+        method: 'post'
+    }).then((res) => {
+        console.log(res);
     })
+
 }
 </script>

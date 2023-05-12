@@ -5,7 +5,7 @@
         </template>
         <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick" style="height: 100%;">
             <el-tab-pane label="竞赛详情" name="first"><Detials :mid="mid"/></el-tab-pane>
-            <el-tab-pane label="排名" name="second"><rank/></el-tab-pane>
+            <el-tab-pane label="排名" name="second"><rank :mid="mid"/></el-tab-pane>
             <el-tab-pane label="反作弊" name="third"><matchAntiCheat :mid="mid"/></el-tab-pane>
         </el-tabs>
     </el-page-header>
@@ -21,7 +21,6 @@ import Detials from '@/views/match/components/details.vue';
 import rank from '@/views/match/components/rank.vue';
 const route = useRoute()
 const mid = route.query.mid
-
 
 
 const activeName = ref('first')

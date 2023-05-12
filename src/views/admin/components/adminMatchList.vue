@@ -16,7 +16,7 @@
 
     <el-table-column label="操作" #default="scope" width="200">
       <el-row>
-        <el-button type="primary" :icon="Edit" circle @click="editMatch(scope)" />
+        <el-button type="primary" :icon="Edit" circle @click="editMatch(scope.row.id,scope.row.matchName)" />
 
         <el-button type="info" :icon="Setting" circle @click="toManageMatch(scope.row.id)" />
 
@@ -25,11 +25,26 @@
     </el-table-column>
 
   </el-table>
+
+  <!-- 修改dialog -->
+  <el-dialog v-model="visible" :show-close="false">
+    <template #header="{ close, titleId, titleClass }">
+      <div class="my-header">
+        <h4 :id="titleId" :class="titleClass">{{ editMatchName }}</h4>
+        <el-button type="danger" @click="close">
+          <el-icon class="el-icon--left"><CircleCloseFilled /></el-icon>
+          Close
+        </el-button>
+      </div>
+    </template>
+    <addMatch type="edit"/>
+  </el-dialog>
 </template>
   
 <script lang="ts" setup>
 import API from '@/plugins/axiosInstance';
 import { getCurrentInstance, inject, ref } from 'vue'
+import addMatch from './addMatch.vue';
 import {matchStore} from '@/stores/matchStore'
 import {
   Delete,
@@ -40,8 +55,14 @@ import router from '@/router';
 const internalInstance = getCurrentInstance()
 const globalProperties = internalInstance?.appContext.config.globalProperties
 const tableData = ref([])
-const editMatch = (match:any) => {
-  console.log("match",match);
+const visible = ref(false)
+
+const editMatchName = ref("None")
+// 去修改竞赛
+const editMatch = (id:string,matchName:string) => {
+  matchStore().setEditMatchId(id)
+  editMatchName.value = matchName
+  visible.value = true
 }
 // 跳转竞赛管理页面
 const toManageMatch = (id: string) => {
@@ -80,4 +101,11 @@ const deleteMatch = (id: string) => {
 
 
 </script>
-  
+
+<style scoped>
+.my-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+</style>

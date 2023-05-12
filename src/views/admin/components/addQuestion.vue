@@ -17,6 +17,8 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { userStore } from '@/store';
 import type { UploadProps, UploadUserFile } from 'element-plus'
 
+
+
 const headers = {
   token: userStore().$state.user.token
 }

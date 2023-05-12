@@ -21,7 +21,7 @@
       </el-card>
     </el-col>
   </el-row>
-  <el-empty v-if="Data.values.length == 0" description="目前还没有进行任何竞赛噢~" />
+  <el-empty v-if="Data.length == 0" description="目前还没有进行任何竞赛噢~" />
 </template>
   
 <script lang="ts" setup>
@@ -58,7 +58,8 @@ const Data = ref([
     state: ''
   }
 ])
-Data.value = []
+
+
 const loadMatchList = () => {
   
   API({

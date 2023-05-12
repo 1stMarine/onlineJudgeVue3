@@ -13,6 +13,8 @@ import axios from './plugins/axiosInstance'
 import ace from 'ace-builds'
 // 引入echarts
 import * as echarts from 'echarts'
+// 引入字节跳动图标库
+import {install} from '@icon-park/vue-next/es/all'
 
 const app = createApp(App)
 const pinia = createPinia()
@@ -22,7 +24,8 @@ app.use(pinia)
 app.use(router)
 
 app.use(ace)
-
+install(app)
+install(app,'i')
 // 挂载全局方法
 const showMessage = ( message: string, state: any) => {
     ElNotification({

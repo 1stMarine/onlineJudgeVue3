@@ -47,16 +47,17 @@
     })
   
     const toProblemDetial = (question:Question)=>{
-      questionStore().setCurrentChoice(question)
-      judgerStore().setJudgeType(101)
-      if(props.state != '已开始'){
+
+      if(props.state == '已开始'){
         ElNotification({
-                title: "不润许的操作!",
+                title: "不允许的操作!",
                 message: "比赛状态已经结束或未开始!",
                 type: 'error',
             })
         return
       }
+      questionStore().setCurrentChoice(question)
+      judgerStore().setJudgeType(101)
       router.push({name:'problemDetial'})
     }
   
