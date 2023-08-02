@@ -1,6 +1,5 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-import { getCurrentInstance } from 'vue';
 import { ElNotification } from 'element-plus';
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
@@ -15,6 +14,19 @@ import ace from 'ace-builds'
 import * as echarts from 'echarts'
 // 引入字节跳动图标库
 import {install} from '@icon-park/vue-next/es/all'
+// TaulwindCss
+import './index.css'
+// v-md-editor Markdown组件
+import VMdEditor from '@kangc/v-md-editor'
+import '@kangc/v-md-editor/lib/style/base-editor.css'
+import githubTheme from '@kangc/v-md-editor/lib/theme/github'
+import '@kangc/v-md-editor/lib/theme/style/github.css'
+// highlightjs 核心代码
+import hljs from 'highlight.js'
+
+VMdEditor.use(githubTheme,{
+    Hljs:hljs
+})
 
 const app = createApp(App)
 const pinia = createPinia()
@@ -22,7 +34,7 @@ pinia.use(piniaPersist)
 app.use(ElementPlus)
 app.use(pinia)
 app.use(router)
-
+app.use(VMdEditor)
 app.use(ace)
 install(app)
 install(app,'i')

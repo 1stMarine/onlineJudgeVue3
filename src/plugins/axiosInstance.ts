@@ -1,11 +1,16 @@
 import { userStore } from '@/store'
 import axios from 'axios'
 import { ElNotification } from 'element-plus'
+import JSONBIG from 'json-bigint'
+
+
 
 const API = axios.create({
     baseURL: '/api',
     timeout: 200000
 })
+
+
 
 // 请求拦截器
 API.interceptors.request.use(config => {

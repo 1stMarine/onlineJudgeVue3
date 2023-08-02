@@ -1,67 +1,31 @@
 <script setup lang="ts">
 import Nav from '@/components/front/Nav.vue';
+import Footer from '@/components/front/footer.vue';
+import noticeBoard from '@/components/front/noticeBoard.vue';
 import QuestionList from '@/views/problem/index.vue'
+import { useRoute } from 'vue-router';
+
+const route = useRoute()
 </script>
 
+
+
 <template>
+  <Nav></Nav>
   <div class="common-layout">
-    <el-container style="min-height: 100vh;">
 
-      <el-header>
-        <Nav></Nav>
-      </el-header>
-      <el-main class="container">
-        <div class="left"></div>
-        <div class="mid">
-          <RouterView>
+    <RouterView :key="route.path">
 
-          </RouterView>
-        </div>
-        <div class="right"></div>
-      </el-main>
-      <el-footer>
-        <div id="sub-footer">
-          <div>
-            <el-row>
-              <el-col :span="12">
-                <div class="copyright" style="margin-left: 20%;">
+    </RouterView>
 
-                  <p>&copy; CodeSky 2023 All right reserved.
-                  </p>
-                  <p>
-                    桂ICP备 2023003399号-1
-                  </p>
-                </div>
-              </el-col>
-              <el-col :span="12">
-                <ul class="social-network" style="margin-right: 20%;">
-                  <li><a href="https://gitee.com/aa760303601_AA/SpringBoot_OnlineJudge_Systeam.git" data-placement="top"
-                      target="_blank" title="github"><icon-github theme="outline" size="24"
-                        fill="#f8f8f8"></icon-github></a></li>
-                  <li><a href="http://t.csdn.cn/i7dyC" data-placement="top" title="CSDN"
-                      target="_blank"><icon-topic-discussion theme="outline" size="24"
-                        fill="#f8f8f8"></icon-topic-discussion></a></li>
-
-                </ul>
-              </el-col>
-            </el-row>
-          </div>
-        </div>
-      </el-footer>
-
-      <!-- <el-footer style="background-color: black;color: white;">
-<span style="display: flex;justify-content: center;">
-  桂ICP备 2023003399号-1
-</span>
-</el-footer> -->
-    </el-container>
+    <Footer></Footer>
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .container {
-  width: 100vw;
-  height: 80vh;
+  width: 3000px;
+  height: 100%;
   display: flex;
   flex-direction: row;
 
@@ -69,11 +33,11 @@ import QuestionList from '@/views/problem/index.vue'
 
 .left,
 .right {
-  width: 10vw;
+  width: 10%;
 }
 
 .mid {
-  width: 80vw;
+  width: 80%;
 
 }
 
@@ -96,4 +60,5 @@ import QuestionList from '@/views/problem/index.vue'
 li {
   display: inline;
   margin-left: 10px;
-}</style>
+}
+</style>

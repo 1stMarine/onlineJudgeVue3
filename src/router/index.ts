@@ -5,24 +5,45 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Problem from '../views/problem/index.vue'
 import Match from '../views/match/index.vue'
+import Blog from '../views/blog/index.vue'
+import BlogDetail from '../views/blog/components/BlogDetial.vue'
 import Admin from '../views/admin/index.vue'
-import addQuestion from '@/views/admin/components/addQuestion.vue'
-import setting from '../views/admin/components/setting.vue'
-
+import addQuestion from '@/views/admin/components/question/addQuestion.vue'
+import setting from '../views/admin/components/setting/setting.vue'
+import Main from '../components/front/main.vue'
+import Privacy from '../components/front/privacy.vue'
+import Donation from '../components/front/donation.vue'
 import problemDetialVue from '@/views/problem/problemDetial.vue'
-import adminQuestionListVue from '@/views/admin/components/adminQuestionList.vue'
+import adminQuestionListVue from '@/views/admin/components/question/adminQuestionList.vue'
 import User from '@/views/user/index.vue'
-import adminMatchList from '@/views/admin/components/adminMatchList.vue'
-import addMatch from '@/views/admin/components/addMatch.vue'
+import adminMatchList from '@/views/admin/components/match/adminMatchList.vue'
+import addMatch from '@/views/admin/components/match/addMatch.vue'
 import setupAllRouterGuard from './listener'
 import matchDetial from '@/views/match/components/matchDetial.vue'
-import adminMatchManageVue from '@/views/admin/components/adminMatchManage.vue'
+import adminMatchManageVue from '@/views/admin/components/match/adminMatchManage.vue'
+import editQuestionVue from '@/views/admin/components/question/editQuestion.vue'
+import adminUserListVue from '@/views/admin/components/user/adminUserList.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
-      redirect: '/problem'
+      redirect: '/main'
+    },
+    {
+      path:'/main',
+      name:'main',
+      component: Main
+    },
+    {
+      path:'/privacy',
+      name:'privacy',
+      component: Privacy
+    },
+    {
+      path:'/donation',
+      name:'donation',
+      component: Donation
     },
     {
       path:'/user',
@@ -50,6 +71,15 @@ const router = createRouter({
       component: Match
     },
     {
+      path:'/blog/:type',
+      name:'blog',
+      component:Blog
+    },{
+      path:'/blogDetail/:bid',
+      name:'blogDetail',
+      component:BlogDetail
+    },
+    {
       path: '/admin',
       name: 'admin',
       components:{
@@ -75,6 +105,10 @@ const router = createRouter({
           path:'adminMatchList',
           name:'adminMatchList',
           component:adminMatchList,
+        },{
+          path:'editQuestionVue',
+          name:'editQuestionVue',
+          component:editQuestionVue
         },
         {
           path:'addMatch',
@@ -85,6 +119,10 @@ const router = createRouter({
           path:'manageMatch',
           name:'manageMatch',
           component:adminMatchManageVue
+        },{
+          path:'adminUserList',
+          name:'adminUserList',
+          component:adminUserListVue
         }
       ]
  

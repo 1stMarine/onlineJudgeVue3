@@ -1,6 +1,6 @@
 <template>
   <el-upload v-model:file-list="fileList" class="upload-demo" action="/api/uploadQuestion" accept=".xml" multiple
-    :headers="headers" :on-preview="handlePreview" :on-remove="handleRemove" :before-remove="beforeRemove" :limit="1"
+    :headers="headers" :on-preview="handlePreview" :on-remove="handleRemove" :before-remove="beforeRemove" :limit="100"
     :on-exceed="handleExceed">
     <el-button type="primary">选择文件并上传</el-button>
     <template #tip>
@@ -35,7 +35,7 @@ const handlePreview: UploadProps['onPreview'] = (uploadFile) => {
 
 const handleExceed: UploadProps['onExceed'] = (files, uploadFiles) => {
   ElMessage.warning(
-    `The limit is 3, you selected ${files.length} files this time, add up to ${files.length + uploadFiles.length
+    `The limit is 100, you selected ${files.length} files this time, add up to ${files.length + uploadFiles.length
     } totally`
   )
 }

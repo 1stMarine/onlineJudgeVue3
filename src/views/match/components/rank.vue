@@ -1,25 +1,62 @@
 <template>
+  <div class="overflow-hidden rounded-lg border border-gray-200 shadow-md m-5" v-loading="rankLoading" element-loading-background="rgba(256, 256, 256, 1)" element-loading-text="正在拼命加载中...">
+    <table class="w-full border-collapse bg-white text-left text-sm text-gray-500">
+      <thead class="bg-gray-50">
+        <tr>
+          <th scope="col" class="px-6 py-4 font-medium text-gray-900">排名</th>
+          <th scope="col" class="px-6 py-4 font-medium text-gray-900">用户</th>
+          <th scope="col" class="px-6 py-4 font-medium text-gray-900">通过详情</th>
+          <th scope="col" class="px-6 py-4 font-medium text-gray-900">得分</th>
 
-  <el-table :data="tableData" style="width: 100%;height: 500px;">
-    <el-table-column type="index" :index="indexMethod"  label="排名"/>
-    <el-table-column label="用户id" prop="uid"  width="180"/>
-    <el-table-column label="用户名"  width="180">
-      <template #default="scope">
-        <a href="">{{ scope.row.userName }}</a>
-      </template>
-    </el-table-column>
-    <el-table-column>
-      <el-table-column v-for="(items, indexs) in tableData[0].results" :key="indexs" :prop="items" :label="indexs"  >
-        <template #default="scope">
-          <el-tag v-if="scope.row.results[indexs] == 'Accept'" class="ml-2" type="success" >{{scope.row.results[indexs]}}</el-tag>
-          <el-tag v-else-if="scope.row.results[indexs] == 'Empty'" class="ml-2" type="info" >未提交</el-tag>
-          <el-tag v-else="scope.row.results[indexs] != 'Accept'" class="ml-2" type="danger" >{{scope.row.results[indexs]}}</el-tag>
-        </template>
-      </el-table-column>
-    </el-table-column>
-    <el-table-column label="得分" prop="totalScore" width="80"/>
+        </tr>
+      </thead>
 
-  </el-table>
+      <tbody class="divide-y divide-gray-100 border-t border-gray-100">
+        <tr class="hover:bg-gray-50"  v-for="(rank,index) in tableData">
+          <td class="px-6 py-4">#{{index+1}}</td>
+          <th class="flex gap-3 px-6 py-4 font-normal text-gray-900">
+            <div class="relative h-10 w-10">
+              <img class="h-full w-full rounded-full object-cover object-center"
+                :src="rank.url"
+                alt="" />
+                <!-- 在线提示绿点 -->
+              <!-- <span class="absolute right-0 bottom-0 h-2 w-2 rounded-full bg-green-400 ring ring-white"></span> -->
+            </div>
+            <div class="text-sm">
+              <div class="font-medium text-gray-700">{{ rank.userName }}</div>
+              <div class="text-gray-400">{{ rank.email }}</div>
+            </div>
+          </th>
+
+          <td class="px-6 py-4">
+            <div class="flex gap-2" v-for="(items,index) in rank.results">
+              <span v-if="rank.results[index] == 'Accept'"
+                class="inline-flex items-center gap-1 rounded-full bg-green-50 px-2 py-1 text-xs font-semibold text-green-600">
+                {{ rank.results[index] }}
+              </span>
+              <span v-else-if="rank.results[index] == 'Empty'"
+                class="inline-flex items-center gap-1 rounded-full bg-gray-50 px-2 py-1 text-xs font-semibold text-gray-600">
+                {{ rank.results[index] }}
+              </span>
+              <span v-else="rank.results[index]!= 'Accept'"
+                class="inline-flex items-center gap-1 rounded-full bg-red-50 px-2 py-1 text-xs font-semibold text-red-600">
+                {{ rank.results[index] }}
+              </span>
+            </div>
+          </td>
+          <td class="px-6 py-4">
+            <span
+              class="inline-flex items-center gap-1 rounded-full bg-green-50 px-2 py-1 text-xs font-semibold text-green-600">
+              <span class="h-1.5 w-1.5 rounded-full bg-green-600"></span>
+              {{ rank.totalScore }}
+            </span>
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
 </template>
   
 <script lang="ts" setup>
@@ -29,29 +66,13 @@ import { matchStore } from '@/stores/matchStore';
 const indexMethod = (index: number) => {
   return ++index
 }
+const rankLoading = ref(true)
 const prop = defineProps(['mid'])
 const mid = ref(matchStore().$state.currentChoice.id)
-if(mid.value == undefined || mid.value == "" ){
+if (mid.value == undefined || mid.value == "") {
   mid.value = prop.mid
 }
-const tableData = ref([
-  // {
-  //   "id": 288423936,
-  //   "uid": 282718464,
-  //   "userName": "gg",
-  //   "mid": 288423681,
-  //   "results": "{\"281961728\":\"Accept\",\"287716992\":\"Accept\"}",
-  //   "totalScore": 2
-  // },
-  // {
-  //   "id": 288423936,
-  //   "uid": 282718464,
-  //   "userName": "ckw",
-  //   "mid": 288423681,
-  //   "results": "{\"281961728\":\"Accept\",\"287716992\":\"WrongAnswer\"}",
-  //   "totalScore": 1
-  // }
-])
+const tableData = ref([])
 const len = ref(0)
 const results_index = ref(0)
 const loadRank = () => {
@@ -67,7 +88,7 @@ const loadRank = () => {
     len.value = res.data.data.length
     results_index.value = res.data.data.length
     console.log(tableData.value);
-
+    rankLoading.value = false
   })
 }
 loadRank()

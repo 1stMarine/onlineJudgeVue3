@@ -45,7 +45,7 @@
     </div>
     <br>
     <el-row class="mb-9" v-show="!onlyrecord">
-        <el-button type="primary" @click="judge" :loading="submiting" style="float: left;">提交代码</el-button>
+        <el-button type="success" @click="judge" :loading="submiting" style="float: left;"><icon-upload-logs theme="two-tone" size="24" :fill="['#ffffff' ,'#ffffff']"/> &nbsp; 提交代码</el-button>
         <!-- <el-button type="success">运行测试</el-button> -->
         <el-steps v-show="showProcess" :space="200" :active="infoIndex" finish-status="success" style="width: 80%;"
             :align-center="true">
@@ -415,7 +415,7 @@ export default {
         .item {
             margin: 10px auto;
             text-align: center;
-            margin-top: 50px;
+            margin-top: 30px;
 
             .title {
                 color: white;

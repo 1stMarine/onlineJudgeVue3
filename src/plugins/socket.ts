@@ -14,7 +14,7 @@ var socket = {
   ws_url: "",
   // online: wss://www.nextstepcode.club/ws
   // local : ws://127.0.0.1:8081/ws
-  base_url:'ws://127.0.0.1:8081/ws',
+  base_url:'wss://www.nextstepcode.club/ws',
   // 开启标识
   socket_open: false,
   // 心跳timer
@@ -45,7 +45,7 @@ var socket = {
     if (socket.websock) {
       return socket.websock
     }
-
+    
     socket.websock = new WebSocket(socket.ws_url)
     socket.websock.onmessage = function (e) {
       socket.receive(e)

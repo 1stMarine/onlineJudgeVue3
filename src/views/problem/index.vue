@@ -1,46 +1,71 @@
 <template>
-  <!-- 搜索框 -->
-  <el-input v-model="searchContent" placeholder="搜索题目" class="input-with-select" size="large"
-    @keydown.enter="searchQuestion">
-    <template #prepend>
-      <el-button :icon="Search" />
-    </template>
-  </el-input>
-  <!-- 题目列表 -->
-  <el-table :data="tableData.question_list" style="width: 100%" v-loading="loading">
-    <el-table-column label="#" style="width: 10%;" #default="scope">
-      {{ scope.row.id }}
-      <el-popover placement="top-start" title="通过！" :width="200" trigger="hover"
-        content="你已经成功征服这道题目=)">
-        <template #reference>
-          <icon-check-one v-if="scope.row.uid != 0" theme="two-tone" size="23" :fill="['#333', '#7ed321']"
-            :strokeWidth="2" />
+  <el-container>
+    <el-aside width="20%">
 
-        </template>
+    </el-aside>
+    <el-container style="min-height: 105vh;">
+      <el-header>
 
-      </el-popover>
-    </el-table-column>
+      </el-header>
+      <el-main>
 
-    <el-table-column label="题目" style="width: 70%;">
-      <template #default="scope">
-        <el-button type="primary" @click="toProblemDetial(scope.row)" link>{{ scope.row.questionName }}</el-button>
-      </template>
-    </el-table-column>
-    <el-table-column #default="scope" label="通过率" style="width: 10%;">
-      {{ scope.row.passRate * 100 }} %
-    </el-table-column>
-    <el-table-column label="难度" style="width: 10%;">
-      <template #default="scope">
-        <el-tag class="ml-2" v-show="scope.row.difficulty == '简单'">简单</el-tag>
-        <el-tag class="ml-2" type="success" v-show="scope.row.difficulty == '中等'">中等</el-tag>
-        <el-tag class="ml-2" type="warning" v-show="scope.row.difficulty == '困难'">困难</el-tag>
-        <el-tag class="ml-2" type="danger" v-show="scope.row.difficulty == '噩梦'">噩梦</el-tag>
-      </template>
-    </el-table-column>
-  </el-table>
-  <!-- 分页 -->
-  <el-pagination class="pagination" background layout="prev, pager, next" :total="total_size" :page-size="page_size"
-    @current-change="changePage" />
+        <el-card shadow="always" style="height: 100%">
+          <!-- 搜索框 -->
+          <el-input v-model="searchContent" placeholder="搜索题目" class="input-with-select" size="large"
+            @keydown.enter="searchQuestion">
+            <template #prepend>
+              <el-button :icon="Search" />
+            </template>
+          </el-input>
+          <!-- 题目列表 -->
+          <el-table :data="tableData.question_list" style="width: 100%" v-loading="loading"
+            element-loading-text="正在拼命加载中..." >
+            <el-table-column label="#" style="width: 10%;" #default="scope">
+              {{ scope.row.id }}
+
+
+              <el-popover placement="top-start" title="通过！" :width="200" trigger="hover" v-if="scope.row.uid != 0"
+                content="你已经成功征服这道题目=)">
+                <template #reference>
+                  <icon-check-one theme="two-tone" size="23" :fill="['#333', '#7ed321']" :strokeWidth="2" />
+
+                </template>
+
+              </el-popover>
+            </el-table-column>
+
+            <el-table-column label="题目" style="width: 70%;">
+              <template #default="scope">
+                <el-button type="primary" @click="toProblemDetial(scope.row)" link>{{ scope.row.questionName
+                }}</el-button>
+              </template>
+            </el-table-column>
+            <el-table-column #default="scope" label="通过率" style="width: 10%;">
+              {{ scope.row.passRate * 100 }} %
+            </el-table-column>
+            <el-table-column label="难度" style="width: 10%;">
+              <template #default="scope">
+                <el-tag class="ml-2" v-show="scope.row.difficulty == '简单'">简单</el-tag>
+                <el-tag class="ml-2" type="success" v-show="scope.row.difficulty == '中等'">中等</el-tag>
+                <el-tag class="ml-2" type="warning" v-show="scope.row.difficulty == '困难'">困难</el-tag>
+                <el-tag class="ml-2" type="danger" v-show="scope.row.difficulty == '噩梦'">噩梦</el-tag>
+              </template>
+            </el-table-column>
+          </el-table>
+          <!-- 分页 -->
+          <el-pagination class="pagination" background layout="prev, pager, next" :total="total_size"
+            :page-size="page_size" @current-change="changePage" />
+
+
+        </el-card>
+
+
+      </el-main>
+      <el-footer>
+      </el-footer>
+    </el-container>
+    <el-aside width="20%"></el-aside>
+  </el-container>
 </template>
   
 <script lang="ts" setup>
@@ -55,7 +80,6 @@ import emitter from "@/lib/bus";
 import { MittRouterNameSpace } from "@/lib/type";
 import { judgerStore } from '@/stores/judgerStore';
 import { userStore } from '@/store';
-import { Scope } from 'tools-vue3';
 const router = useRouter()
 // 统一导航栏的激活状态样式
 onMounted(() => {

@@ -15,7 +15,12 @@ const whiteList = [
         "match",
         "problemDetial",
         "getMatchList",
-        "matchDetial"
+        "matchDetial",
+        "blog",
+        "main",
+        "privacy",
+        "blogDetail",
+        "donation"
 ]
 
 const adminList = [

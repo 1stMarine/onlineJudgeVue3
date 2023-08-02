@@ -9,7 +9,7 @@ export const userStore = defineStore('main',{
                 experience:0,
                 gender:"",
                 hardResolve:0,
-                id:0,
+                id:"0",
                 level:0,
                 location:"",
                 meddleResolve:0,
@@ -20,11 +20,14 @@ export const userStore = defineStore('main',{
                 tag:"",
                 token:"",
                 url:"https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png",
-                rank:0
-
+                rank:0,
+                sign:'',
+                fans:0,
+                subscribe:0
             },
             isLogin:false,
-            isAdmin:false
+            isAdmin:false,
+            sendVerCodeTime:0
         }
     },
     getters:{},
@@ -40,6 +43,9 @@ export const userStore = defineStore('main',{
             this.user = data
             this.isAdmin = false
             this.isLogin = false
+        },
+        setSendVerCodeTime(dateTime:number){
+            this.sendVerCodeTime = dateTime
         }
 
     },

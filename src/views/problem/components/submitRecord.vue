@@ -1,5 +1,5 @@
 <template>
-    <el-table :data="tableData.record_list" stripe style="width: 100%;">
+    <el-table :data="tableData.record_list" stripe style="width: 100%;" v-loading="loadingRecord" element-loading-text="正在拼命加载中...">
         <el-table-column prop="id" label="id" style="width: 5%;" />
         <el-table-column prop="userName" label="用户" style="width: 20%;" />
         <el-table-column prop="questionName" label="题目" style="width: 20%;">
@@ -25,7 +25,7 @@
         <el-descriptions :title="'No.' + recorddetial.qid" :column="3" border>
             <el-descriptions-item label="題目名" label-align="right" align="center" label-class-name="my-label"
                 class-name="my-content" width="150px">{{ recorddetial.questionName }}</el-descriptions-item>
-            <el-descriptions-item label="时间" label-align="right" align="center">{{ recorddetial.time }} s</el-descriptions-item>
+            <el-descriptions-item label="时间" label-align="right" align="center">{{ recorddetial.time }} ms</el-descriptions-item>
             <el-descriptions-item label="空间" label-align="right" align="center">{{ recorddetial.memory }} mb</el-descriptions-item>
 
             <el-descriptions-item label="状态" label-align="right" align="center">
@@ -66,16 +66,16 @@ const uid = userStore().$state.user.id
 const qid = questionStore().$state.currentChoice.id
 const router = useRouter()
 const dialogVisible = ref(false)
+const loadingRecord = ref(true)
 userStore()
 onMounted(() => {
 
     emitter.on('loadRecord', () => {
+        
+        
         // 用户登录的情况下得到他这道题目的编译记录
         const url = ref("/getSubmitRecords/" + uid + "/" + qid + "/1")
-        // 用户未登录的情况下，得到全部
-        if (props.uid != undefined) {
-            return
-        }
+
         console.log("uid", props.uid);
 
         API({
@@ -115,24 +115,30 @@ const tableData = reactive({
     record_list: []
 })
 const loadRecord = () => {
-
+    
     let url = "/getSubmitRecords/" + uid + "/" + qid + "/1"
     if (props.uid == undefined) {
+        // 没登陆
         return
-    }else if(props.qid == undefined){
+    }
+    if(props.qid == undefined){
+        // 在个人中心
         url = "/getSubmitRecordsWithUid/" + uid + "/1"
     }
+    if(props.uid == 'detial'){
+        // 在题目详情页面
+        url = "/getSubmitRecords/" + uid + "/" + qid + "/1"
+    }
 
-
-    console.log(props.uid);
+    
 
 
     API({
         url: url,
         method: 'get'
     }).then((res) => {
-
         tableData.record_list = res.data.data
+        loadingRecord.value = false
     })
 }
 loadRecord()

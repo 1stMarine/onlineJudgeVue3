@@ -22,7 +22,7 @@ export const questionStore = defineStore('question',{
                 resource:'',
                 tag:''
             },
-            
+            editQuestionId:'0'
         }
     },
     getters:{},
@@ -30,6 +30,9 @@ export const questionStore = defineStore('question',{
         // 设置当前选择的题目
         setCurrentChoice(data:any){
             this.currentChoice = data
+        },
+        setEditQuestionId(id:string){
+            this.editQuestionId = id
         }
 
     },

@@ -1,9 +1,9 @@
 <template>
   <el-table :data="tableData" style="width: 100%">
-    <el-table-column prop="id" label="id" width="120" />
-    <el-table-column prop="matchName" label="竞赛名" width="200" />
-    <el-table-column prop="createTime" label="创建时间" width="180" />
-    <el-table-column prop="persistentTime" label="持续时间(分钟)" width="150" />
+    <el-table-column type="index" label="#" width="auto" />
+    <el-table-column prop="matchName" label="竞赛名" width="auto" />
+    <el-table-column prop="createTime" label="创建时间" width="auto" />
+    <el-table-column prop="persistentTime" label="持续时间(分钟)" width="auto" />
     <el-table-column #default="scope" label="状态" >
       <div v-show="scope.row.state == '未开始'"> <el-tag type="success" class="mx-1" effect="dark" round>{{ scope.row.state
       }}</el-tag></div>
@@ -14,7 +14,7 @@
       </div>
     </el-table-column>
 
-    <el-table-column label="操作" #default="scope" width="200">
+    <el-table-column label="操作" #default="scope" width="auto">
       <el-row>
         <el-button type="primary" :icon="Edit" circle @click="editMatch(scope.row.id,scope.row.matchName)" />
 
@@ -33,7 +33,7 @@
         <h4 :id="titleId" :class="titleClass">{{ editMatchName }}</h4>
         <el-button type="danger" @click="close">
           <el-icon class="el-icon--left"><CircleCloseFilled /></el-icon>
-          Close
+          关闭
         </el-button>
       </div>
     </template>
@@ -49,7 +49,8 @@ import {matchStore} from '@/stores/matchStore'
 import {
   Delete,
   Edit,
-  Setting
+  Setting,
+  CircleCloseFilled
 } from '@element-plus/icons-vue'
 import router from '@/router';
 const internalInstance = getCurrentInstance()
